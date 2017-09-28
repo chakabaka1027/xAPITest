@@ -8,6 +8,10 @@ public class PlayerController : MonoBehaviour {
 
 	public bool isSlowing = false;
 
+    //Player Stats
+    public float health = 100;
+    public float stamina = 100;
+
 	//Crouch
     public LayerMask ground;
     bool isGrounded;
@@ -20,7 +24,7 @@ public class PlayerController : MonoBehaviour {
     bool hitCeiling = false;
 
     //movement
-    public float walkSpeed = 10;
+    public float walkSpeed = 7;
     Vector3 targetWalkAmount;
     Vector3 walkAmount;
     Vector3 smoothDampMoveRef;
@@ -48,9 +52,9 @@ public class PlayerController : MonoBehaviour {
 
     //set movespeed
         if(Input.GetKeyDown(KeyCode.LeftShift)){
-        	walkSpeed = 3;
+        	walkSpeed = 13;
 		} else if (Input.GetKeyUp(KeyCode.LeftShift)){
-			walkSpeed = 10;
+			walkSpeed = 7;
 		}
 
 	//shift gravity
@@ -94,10 +98,8 @@ public class PlayerController : MonoBehaviour {
         if(gravityShift.gravityShifted == 0) {
             Vector3 trueMoveDir = (newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
             targetWalkAmount = trueMoveDir * walkSpeed + Vector3.up * velocityY;
-
 		    walkAmount = Vector3.SmoothDamp(walkAmount, targetWalkAmount, ref smoothDampMoveRef, 0.1f);
             controller.Move(walkAmount * Time.fixedDeltaTime);
-
     //reverse controls if gravity is shifted
         } else if (gravityShift.gravityShifted == 1) {
             Vector3 trueMoveDir = (-newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
