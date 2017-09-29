@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour {
     bool hitCeiling = false;
 
     //movement
-    public float walkSpeed = 7;
+    public float walkSpeed = 4;
     Vector3 targetWalkAmount;
     Vector3 walkAmount;
     Vector3 smoothDampMoveRef;
@@ -54,8 +54,12 @@ public class PlayerController : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.LeftShift)){
         	walkSpeed = 13;
 		} else if (Input.GetKeyUp(KeyCode.LeftShift)){
-			walkSpeed = 7;
+			walkSpeed = 4;
 		}
+        
+        if (stamina <= 0) {
+            walkSpeed = 4;
+        } 
 
 	//shift gravity
 		if(Input.GetKeyDown(KeyCode.Space)){
