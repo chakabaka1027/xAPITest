@@ -18,9 +18,9 @@ public class StaminaSystem : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Horizontal") != 0 || Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") != 0){
-            playerController.stamina -= Time.deltaTime * 15;
+            playerController.stamina -= Time.deltaTime * 25;
         } else {
-            playerController.stamina += Time.deltaTime * 5;
+            playerController.stamina += Time.deltaTime * 15;
         }
 
         if(playerController.stamina > 100){
