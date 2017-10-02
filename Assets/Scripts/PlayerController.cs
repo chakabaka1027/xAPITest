@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
     public LayerMask ground;
     bool isGrounded;
     int crouchToggle = 0;
-    float height = .75f;
+    public float height = .75f;
     float crouchLerpPercent = 0;
 
     //flip grav
@@ -24,7 +24,10 @@ public class PlayerController : MonoBehaviour {
     bool hitCeiling = false;
 
     //movement
+    public float speed = 4;
     public float walkSpeed = 4;
+    public float runSpeed = 13;
+
     Vector3 targetWalkAmount;
     Vector3 walkAmount;
     Vector3 smoothDampMoveRef;
@@ -51,14 +54,14 @@ public class PlayerController : MonoBehaviour {
     void Update() {
 
     //set movespeed
-        if(Input.GetKeyDown(KeyCode.LeftShift)){
-        	walkSpeed = 13;
-		} else if (Input.GetKeyUp(KeyCode.LeftShift)){
-			walkSpeed = 4;
+        if(Input.GetKey(KeyCode.LeftShift)){
+        	speed = runSpeed;
+		} else {
+			speed = walkSpeed;
 		}
         
         if (stamina <= 0) {
-            walkSpeed = 4;
+            speed = walkSpeed;
         } 
 
 	//shift gravity
@@ -101,13 +104,13 @@ public class PlayerController : MonoBehaviour {
     //movement
         if(gravityShift.gravityShifted == 0) {
             Vector3 trueMoveDir = (newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
-            targetWalkAmount = trueMoveDir * walkSpeed + Vector3.up * velocityY;
+            targetWalkAmount = trueMoveDir * speed + Vector3.up * velocityY;
 		    walkAmount = Vector3.SmoothDamp(walkAmount, targetWalkAmount, ref smoothDampMoveRef, 0.1f);
             controller.Move(walkAmount * Time.fixedDeltaTime);
     //reverse controls if gravity is shifted
         } else if (gravityShift.gravityShifted == 1) {
             Vector3 trueMoveDir = (-newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
-            targetWalkAmount = trueMoveDir * walkSpeed + Vector3.up * velocityY;
+            targetWalkAmount = trueMoveDir * speed + Vector3.up * velocityY;
 
 		    walkAmount = Vector3.SmoothDamp(walkAmount, targetWalkAmount, ref smoothDampMoveRef, 0.1f);
             controller.Move(walkAmount * Time.fixedDeltaTime);
@@ -207,4 +210,6 @@ public class PlayerController : MonoBehaviour {
         Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
         body.velocity = pushDir * 5;
     }
+
+    
 }
