@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(GravityShift))]
 [RequireComponent(typeof(Grab))]
 public class PlayerController : MonoBehaviour {
-
+    [HideInInspector]
 	public bool isSlowing = false;
 
     //Player Stats
@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour {
     public LayerMask ground;
     bool isGrounded;
     int crouchToggle = 0;
+    [HideInInspector]
     public float height = .75f;
     float crouchLerpPercent = 0;
 
@@ -24,8 +25,12 @@ public class PlayerController : MonoBehaviour {
     bool hitCeiling = false;
 
     //movement
+    public bool flyMode = false;
+    //flymode
     public float speed = 4;
+    [HideInInspector]
     public float walkSpeed = 4;
+    [HideInInspector]
     public float runSpeed = 13;
 
     Vector3 targetWalkAmount;
@@ -53,77 +58,78 @@ public class PlayerController : MonoBehaviour {
 	
     void Update() {
 
-    //set movespeed
-        if(Input.GetKey(KeyCode.LeftShift)){
-        	speed = runSpeed;
-		} else {
-			speed = walkSpeed;
-		}
+    if(!flyMode){
+        //set movespeed
+            if(Input.GetKey(KeyCode.LeftShift)){
+        	    speed = runSpeed;
+		    } else {
+			    speed = walkSpeed;
+		    }
         
-        if (stamina <= 0) {
-            speed = walkSpeed;
-        } 
+            if (stamina <= 0) {
+                speed = walkSpeed;
+            } 
 
-	//shift gravity
-		if(Input.GetKeyDown(KeyCode.Space)){
-			gravityShift.ShiftGravity();
-		}
+	    //shift gravity
+		    if(Input.GetKeyDown(KeyCode.Space)){
+			    gravityShift.ShiftGravity();
+		    }
 
-	//slow time
-		if(Input.GetMouseButton(1)){
-			Time.timeScale = .25f;
-			Time.fixedDeltaTime = Time.timeScale * .02f;
-			isSlowing = true;
-		} else if (Input.GetMouseButtonUp(1)){
-			Time.timeScale = 1;
-			Time.fixedDeltaTime = Time.fixedUnscaledDeltaTime;
-			isSlowing = false;
-		}
+	    //slow time
+		    if(Input.GetMouseButton(1)){
+			    Time.timeScale = .25f;
+			    Time.fixedDeltaTime = Time.timeScale * .02f;
+			    isSlowing = true;
+		    } else if (Input.GetMouseButtonUp(1)){
+			    Time.timeScale = 1;
+			    Time.fixedDeltaTime = Time.fixedUnscaledDeltaTime;
+			    isSlowing = false;
+		    }
+        }
     }
 
 	void LateUpdate () {
+        if(!flyMode){
+	    //crouch
+		    if(Input.GetKeyDown(KeyCode.C)){
+			    crouchToggle = 1 - crouchToggle;
+			    StopCoroutine("CrouchToggle");
+			    StartCoroutine("CrouchToggle");
+		    }
 
-	//crouch
-		if(Input.GetKeyDown(KeyCode.C)){
-			crouchToggle = 1 - crouchToggle;
-			StopCoroutine("CrouchToggle");
-			StartCoroutine("CrouchToggle");
-		}
+	    //look rotations
+            transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivityX);
+	        verticalLookRotation += Input.GetAxis("Mouse Y") * mouseSensitivityY;
+		    verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
+		    Camera.main.transform.localEulerAngles = Vector3.left * verticalLookRotation;
 
-	//look rotations
-        transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * mouseSensitivityX);
-	    verticalLookRotation += Input.GetAxis("Mouse Y") * mouseSensitivityY;
-		verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
-		Camera.main.transform.localEulerAngles = Vector3.left * verticalLookRotation;
+            Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
-        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+            Vector3 newRight = Vector3.Cross(Vector3.up, gameObject.transform.forward);
+            Vector3 newForward = Vector3.Cross(newRight, Vector3.up);
 
-        Vector3 newRight = Vector3.Cross(Vector3.up, gameObject.transform.forward);
-        Vector3 newForward = Vector3.Cross(newRight, Vector3.up);
+        //movement
+            if(gravityShift.gravityShifted == 0) {
+                Vector3 trueMoveDir = (newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
+                targetWalkAmount = trueMoveDir * speed + Vector3.up * velocityY;
+		        walkAmount = Vector3.SmoothDamp(walkAmount, targetWalkAmount, ref smoothDampMoveRef, 0.1f);
+                controller.Move(walkAmount * Time.fixedDeltaTime);
+        //reverse controls if gravity is shifted
+            } else if (gravityShift.gravityShifted == 1) {
+                Vector3 trueMoveDir = (-newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
+                targetWalkAmount = trueMoveDir * speed + Vector3.up * velocityY;
 
-    //movement
-        if(gravityShift.gravityShifted == 0) {
-            Vector3 trueMoveDir = (newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
-            targetWalkAmount = trueMoveDir * speed + Vector3.up * velocityY;
-		    walkAmount = Vector3.SmoothDamp(walkAmount, targetWalkAmount, ref smoothDampMoveRef, 0.1f);
-            controller.Move(walkAmount * Time.fixedDeltaTime);
-    //reverse controls if gravity is shifted
-        } else if (gravityShift.gravityShifted == 1) {
-            Vector3 trueMoveDir = (-newRight * Input.GetAxisRaw("Horizontal") + newForward * Input.GetAxisRaw("Vertical"));
-            targetWalkAmount = trueMoveDir * speed + Vector3.up * velocityY;
+		        walkAmount = Vector3.SmoothDamp(walkAmount, targetWalkAmount, ref smoothDampMoveRef, 0.1f);
+                controller.Move(walkAmount * Time.fixedDeltaTime);
 
-		    walkAmount = Vector3.SmoothDamp(walkAmount, targetWalkAmount, ref smoothDampMoveRef, 0.1f);
-            controller.Move(walkAmount * Time.fixedDeltaTime);
+            }
 
+            velocityY += Time.deltaTime * gravity;
+
+            //detect when grounded or when hitting ceiling
+            HitGround();
+		    StartCoroutine("HitCeiling");
         }
-
-        velocityY += Time.deltaTime * gravity;
-
-        //detect when grounded or when hitting ceiling
-        HitGround();
-		StartCoroutine("HitCeiling");
-
-       
 	}
 
 	IEnumerator HitCeiling(){

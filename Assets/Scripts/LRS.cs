@@ -13,8 +13,6 @@ using System.Net.Security;
 
 public class LRS : MonoBehaviour {
 
-    float health = 100;
-
     public bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
 		bool isOk = true;
 		// If there are errors in the certificate chain, look at each error to determine the cause.

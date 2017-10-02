@@ -6,10 +6,10 @@ public class GravityShift : MonoBehaviour {
 
     public int gravityShifted = 0;
 
-    Transform mainCamera;
+    //Transform mainCamera;
 
     void Start(){
-    	mainCamera = Camera.main.transform;
+    	//mainCamera = Camera.main.transform;
     }
 
 

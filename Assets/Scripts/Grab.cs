@@ -84,7 +84,7 @@ public class Grab : MonoBehaviour {
         } else if(grabbedObject.GetComponent<SphereCollider>() != null) {
             grabbedObject.GetComponent<SphereCollider>().enabled = true;
         }               
-        grabbedObject.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * 40, ForceMode.Impulse);        
+        grabbedObject.GetComponent<Rigidbody>().AddForce(Camera.main.transform.forward * 20, ForceMode.Impulse);        
 
     }
 
