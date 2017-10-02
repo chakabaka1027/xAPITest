@@ -17,18 +17,21 @@ public class StaminaSystem : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Horizontal") != 0 || Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") != 0){
-            playerController.stamina -= Time.deltaTime * 25;
-        } else {
-            playerController.stamina += Time.deltaTime * 15;
-        }
 
-        if(playerController.stamina > 100){
-            playerController.stamina = 100;
-        } else if (playerController.stamina < 0){
-            playerController.stamina = 0;            
-        }
+        if(!playerController.flyMode){
+		    if(Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Horizontal") != 0 || Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") != 0){
+                playerController.stamina -= Time.deltaTime * 25;
+            } else {
+                playerController.stamina += Time.deltaTime * 15;
+            }
 
-        staminaBar.fillAmount = playerController.stamina/100;
+            if(playerController.stamina > 100){
+                playerController.stamina = 100;
+            } else if (playerController.stamina < 0){
+                playerController.stamina = 0;            
+            }
+
+            staminaBar.fillAmount = playerController.stamina/100;
+        }
 	}
 }

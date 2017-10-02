@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FlightController : MonoBehaviour {
+   
+    int flightToggle = 0;
+    GameObject groundUI;
 
     PlayerController playerController;
     
@@ -10,7 +13,9 @@ public class FlightController : MonoBehaviour {
     Vector3 walkAmount;
     Vector3 smoothDampMoveRef;
     CharacterController controller;
-    float speed = 13;
+    float speed;
+    float slowSpeed = 8;
+    float fastSpeed = 26;
     public float velocityY;
 
     [Header("Look Controls")]
@@ -27,14 +32,20 @@ public class FlightController : MonoBehaviour {
 	void Start () {
 		playerController = FindObjectOfType<PlayerController>();
         controller = FindObjectOfType<CharacterController>();
-
+        groundUI = GameObject.Find("GroundUI");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
         if(Input.GetKeyDown(KeyCode.T)){
-            playerController.flyMode = true; 
+            ToggleFlightMode();
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift)){
+            speed = fastSpeed;
+        } else {
+            speed = slowSpeed;
         }
 
         if(playerController.flyMode){
@@ -64,5 +75,27 @@ public class FlightController : MonoBehaviour {
                 transform.Translate(-Vector3.up * 13 * Time.fixedDeltaTime);
             }
         }
+    }
+
+    void ToggleFlightMode(){
+        flightToggle = 1 - flightToggle;
+
+        //flight on
+        if(flightToggle == 1){
+            playerController.flyMode = true; 
+            groundUI.SetActive(false);
+            playerController.gameObject.transform.Find("TempMesh").GetComponent<MeshRenderer>().enabled = true;
+        
+        //flight off
+        } else if (flightToggle == 0){
+            playerController.flyMode = false; 
+            groundUI.SetActive(true);
+            Camera.main.transform.localEulerAngles = Vector3.zero;
+            Camera.main.transform.position = GameObject.Find("CameraDock").transform.position;
+            playerController.gameObject.transform.Find("TempMesh").GetComponent<MeshRenderer>().enabled = false;
+
+
+        }
+
     }
 }
