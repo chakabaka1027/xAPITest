@@ -7,16 +7,20 @@ public class Grab : MonoBehaviour {
     public LayerMask grabable;
     //public LayerMask checkCollisions;
     bool hasCollided;
-
+    
     bool isGrabbing = false;
 
     GameObject grabbedObject;
     float positionLerpSpeed = 30;
     float rotationLerpSpeed = 25;
 	Material grabbedObjColor;
-	
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.F)) {
+
+    private void Start() {
+    }
+
+    void Update () {
+		
+        if(Input.GetKeyDown(KeyCode.F)) {
             PickUp();
         }
 

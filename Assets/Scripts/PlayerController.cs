@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour {
     [HideInInspector]
     public float walkSpeed = 4;
     [HideInInspector]
-    public float runSpeed = 13;
+    public float runSpeed = 10;
 
     Vector3 targetWalkAmount;
     Vector3 walkAmount;

@@ -69,15 +69,15 @@ public class FlightController : MonoBehaviour {
             transform.Translate(walkAmount * Time.fixedDeltaTime);
 
 
-            if(Input.GetKey(KeyCode.E)){
-                transform.Translate(Vector3.up * 13 * Time.fixedDeltaTime);
+            if(Input.GetKey(KeyCode.Space)){
+                transform.Translate(Vector3.up * 8 * Time.fixedDeltaTime, Space.World);
             }
 
-            if(Input.GetKey(KeyCode.Q)){
-                transform.Translate(-Vector3.up * 13 * Time.fixedDeltaTime);
+            if(Input.GetKey(KeyCode.LeftControl)){
+                transform.Translate(-Vector3.up * 8 * Time.fixedDeltaTime, Space.World);
             }
 
-            if(Input.GetMouseButton(0)){
+            if(Input.GetMouseButton(1)){
                 ChangePlayerLocation();
             }
         }
@@ -111,7 +111,7 @@ public class FlightController : MonoBehaviour {
         Vector3 ray = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
-        if(Physics.SphereCast(ray, 1f, Camera.main.transform.forward, out hit, 50f, environment)){
+        if(Physics.SphereCast(ray, 1f, Camera.main.transform.forward, out hit, Mathf.Infinity, environment)){
             playerController.gameObject.transform.position = hit.point + hit.normal * 1.25f;
         }
     }

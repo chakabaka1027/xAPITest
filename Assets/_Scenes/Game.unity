@@ -1942,7 +1942,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80f0311e8a959704ea0f5bd4e5d0a043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocityY: 0
+  environment:
+    serializedVersion: 2
+    m_Bits: 4294966783
   mouseSensitivityX: 6
   mouseSensitivityY: 6
 --- !u!81 &1485235186
