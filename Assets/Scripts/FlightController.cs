@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(ItemPlacer))]
 public class FlightController : MonoBehaviour {
    
     public LayerMask environment;
+    [HideInInspector]
+    public bool selectingItem = false;
+
 
     int flightToggle = 0;
     GameObject groundUI;
@@ -48,12 +53,17 @@ public class FlightController : MonoBehaviour {
             speed = slowSpeed;
         }
 
+        if(playerController.flyMode){
+            if(Input.GetKeyDown(KeyCode.Space)){
+                GetComponent<ItemPlacer>().ItemSelectionToggle();
+            }
+        }
         
     }
 
     void LateUpdate () {
 
-        if(playerController.flyMode){
+        if(playerController.flyMode && !selectingItem){
 
             yaw += mouseSensitivityX * Input.GetAxis("Mouse X");
             pitch -= mouseSensitivityY * Input.GetAxis("Mouse Y");
@@ -73,11 +83,11 @@ public class FlightController : MonoBehaviour {
 
 
             if(Input.GetKey(KeyCode.E)){
-                transform.Translate(Vector3.up * 8 * Time.fixedDeltaTime, Space.Self);
+                transform.Translate(Vector3.up * speed * Time.fixedDeltaTime, Space.Self);
             }
 
             if(Input.GetKey(KeyCode.Q)){
-                transform.Translate(-Vector3.up * 8 * Time.fixedDeltaTime, Space.Self);
+                transform.Translate(-Vector3.up * speed * Time.fixedDeltaTime, Space.Self);
             }
             
             if(Input.GetMouseButton(1)){
