@@ -36,7 +36,7 @@ MonoBehaviour:
         stationaryBlending: 0.95
         motionBlending: 0.85
   ambientOcclusion:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
       intensity: 1
       radius: 0.3
@@ -79,12 +79,12 @@ MonoBehaviour:
       sampleCount: 10
       frameBlending: 0
   eyeAdaptation:
-    m_Enabled: 0
+    m_Enabled: 1
     m_Settings:
-      lowPercent: 49
+      lowPercent: 86.71599
       highPercent: 99
-      minLuminance: 0
-      maxLuminance: 1
+      minLuminance: 1.5
+      maxLuminance: 2
       exposureCompensation: 0.5
       adaptationType: 0
       speedUp: 2
@@ -284,9 +284,9 @@ MonoBehaviour:
     m_Enabled: 1
     m_Settings:
       colored: 1
-      intensity: 0.102
+      intensity: 0.03
       size: 1
-      luminanceContribution: 0.091
+      luminanceContribution: 1
   vignette:
     m_Enabled: 1
     m_Settings:

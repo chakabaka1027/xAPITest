@@ -36,10 +36,8 @@ public class FlightController : MonoBehaviour {
         controller = FindObjectOfType<CharacterController>();
         groundUI = GameObject.Find("GroundUI");
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
+    void Update() {
         if(Input.GetKeyDown(KeyCode.T)){
             ToggleFlightMode();
         }
@@ -49,6 +47,11 @@ public class FlightController : MonoBehaviour {
         } else {
             speed = slowSpeed;
         }
+
+        
+    }
+
+    void LateUpdate () {
 
         if(playerController.flyMode){
 
@@ -69,17 +72,18 @@ public class FlightController : MonoBehaviour {
             transform.Translate(walkAmount * Time.fixedDeltaTime);
 
 
-            if(Input.GetKey(KeyCode.Space)){
-                transform.Translate(Vector3.up * 8 * Time.fixedDeltaTime, Space.World);
+            if(Input.GetKey(KeyCode.E)){
+                transform.Translate(Vector3.up * 8 * Time.fixedDeltaTime, Space.Self);
             }
 
-            if(Input.GetKey(KeyCode.LeftControl)){
-                transform.Translate(-Vector3.up * 8 * Time.fixedDeltaTime, Space.World);
+            if(Input.GetKey(KeyCode.Q)){
+                transform.Translate(-Vector3.up * 8 * Time.fixedDeltaTime, Space.Self);
             }
-
+            
             if(Input.GetMouseButton(1)){
                 ChangePlayerLocation();
             }
+            
         }
     }
 
