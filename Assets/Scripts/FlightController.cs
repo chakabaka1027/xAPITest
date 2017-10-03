@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FlightController : MonoBehaviour {
    
+    public LayerMask environment;
+
     int flightToggle = 0;
     GameObject groundUI;
 
@@ -16,7 +18,7 @@ public class FlightController : MonoBehaviour {
     float speed;
     float slowSpeed = 8;
     float fastSpeed = 26;
-    public float velocityY;
+    float velocityY = 0;
 
     [Header("Look Controls")]
 	[Range (-10, 10)]
@@ -25,8 +27,8 @@ public class FlightController : MonoBehaviour {
 	public float mouseSensitivityY = 3f;
 	float verticalLookRotation;
 
-    private float yaw = 0.0f;
-    private float pitch = 0.0f;
+    float yaw = 0.0f;
+    float pitch = 0.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -74,6 +76,10 @@ public class FlightController : MonoBehaviour {
             if(Input.GetKey(KeyCode.Q)){
                 transform.Translate(-Vector3.up * 13 * Time.fixedDeltaTime);
             }
+
+            if(Input.GetMouseButton(0)){
+                ChangePlayerLocation();
+            }
         }
     }
 
@@ -85,6 +91,8 @@ public class FlightController : MonoBehaviour {
             playerController.flyMode = true; 
             groundUI.SetActive(false);
             playerController.gameObject.transform.Find("TempMesh").GetComponent<MeshRenderer>().enabled = true;
+            transform.parent.DetachChildren();
+
         
         //flight off
         } else if (flightToggle == 0){
@@ -93,9 +101,18 @@ public class FlightController : MonoBehaviour {
             Camera.main.transform.localEulerAngles = Vector3.zero;
             Camera.main.transform.position = GameObject.Find("CameraDock").transform.position;
             playerController.gameObject.transform.Find("TempMesh").GetComponent<MeshRenderer>().enabled = false;
-
+            transform.parent = GameObject.Find("CameraDock").transform;
 
         }
 
+    }
+
+    void ChangePlayerLocation(){
+        Vector3 ray = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        if(Physics.SphereCast(ray, 1f, Camera.main.transform.forward, out hit, 50f, environment)){
+            playerController.gameObject.transform.position = hit.point + hit.normal * 1.25f;
+        }
     }
 }
