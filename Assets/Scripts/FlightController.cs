@@ -10,6 +10,7 @@ public class FlightController : MonoBehaviour {
     [HideInInspector]
     public bool selectingItem = false;
 
+    UI_ItemPlacement itemPlacerUI;
 
     int flightToggle = 0;
     GameObject groundUI;
@@ -40,6 +41,7 @@ public class FlightController : MonoBehaviour {
 		playerController = FindObjectOfType<PlayerController>();
         //controller = FindObjectOfType<CharacterController>();
         groundUI = GameObject.Find("GroundUI");
+        itemPlacerUI = FindObjectOfType<UI_ItemPlacement>();
 	}
 
     void Update() {
@@ -55,7 +57,7 @@ public class FlightController : MonoBehaviour {
 
         if(playerController.flyMode){
             if(Input.GetKeyDown(KeyCode.Space)){
-                GetComponent<UI_ItemPlacement>().ItemSelectionToggle();
+                itemPlacerUI.ItemSelectionToggle();
             }
         }
         
@@ -110,6 +112,10 @@ public class FlightController : MonoBehaviour {
         
         //flight off
         } else if (flightToggle == 0){
+            if(FindObjectOfType<UI_ItemPlacement>().itemSelectionToggle == 1){
+                itemPlacerUI.ItemSelectionToggle();
+            }
+
             playerController.flyMode = false; 
             groundUI.SetActive(true);
             Camera.main.transform.localEulerAngles = Vector3.zero;

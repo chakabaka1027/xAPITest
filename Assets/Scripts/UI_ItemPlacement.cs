@@ -9,7 +9,7 @@ public class UI_ItemPlacement : MonoBehaviour {
 
     FlightController flightController;
     PlayerController playerController;
-    int itemSelectionToggle = 0;
+    public int itemSelectionToggle = 0;
     GameObject flyUI;
 
     public GameObject[] items;
