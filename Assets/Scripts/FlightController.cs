@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
-[RequireComponent(typeof(ItemPlacer))]
+[RequireComponent(typeof(UI_ItemPlacement))]
 public class FlightController : MonoBehaviour {
    
     public LayerMask environment;
@@ -55,7 +55,7 @@ public class FlightController : MonoBehaviour {
 
         if(playerController.flyMode){
             if(Input.GetKeyDown(KeyCode.Space)){
-                GetComponent<ItemPlacer>().ItemSelectionToggle();
+                GetComponent<UI_ItemPlacement>().ItemSelectionToggle();
             }
         }
         
