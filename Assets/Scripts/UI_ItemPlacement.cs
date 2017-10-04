@@ -37,8 +37,8 @@ public class UI_ItemPlacement : MonoBehaviour {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		        RaycastHit hit;
 
-		        if(Physics.Raycast(ray, out hit, Mathf.Infinity, itemSpawnLocation) && heldObject != null){
-                    heldObject.transform.position = hit.point + hit.normal * 1.25f;
+		        if(Physics.SphereCast(ray, .5f, out hit, Mathf.Infinity, itemSpawnLocation) && heldObject != null){
+                    heldObject.transform.position = hit.point + hit.normal * .5f;
                 } if(!Physics.Raycast(ray, out hit, Mathf.Infinity, itemSpawnLocation) && heldObject != null){
                         heldObject.transform.position = ray.GetPoint(10);
 
@@ -78,9 +78,9 @@ public class UI_ItemPlacement : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		    RaycastHit hit;
 
-		    if(Physics.Raycast(ray, out hit, Mathf.Infinity, itemSpawnLocation)){
+		    if(Physics.SphereCast(ray, .5f, out hit, Mathf.Infinity, itemSpawnLocation)){
                 if(!hasSpawned){
-                    heldObject = Instantiate(items[objectIndex], hit.point + hit.normal * 1.25f, Quaternion.identity) as GameObject;
+                    heldObject = Instantiate(items[objectIndex], hit.point + hit.normal * .5f, Quaternion.identity) as GameObject;
                     heldObject.GetComponent<Rigidbody>().isKinematic = true;
                 }
             } else {
