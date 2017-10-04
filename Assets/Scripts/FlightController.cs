@@ -19,7 +19,7 @@ public class FlightController : MonoBehaviour {
     Vector3 targetWalkAmount;
     Vector3 walkAmount;
     Vector3 smoothDampMoveRef;
-    CharacterController controller;
+    //CharacterController controller;
     float speed;
     float slowSpeed = 8;
     float fastSpeed = 26;
@@ -38,7 +38,7 @@ public class FlightController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		playerController = FindObjectOfType<PlayerController>();
-        controller = FindObjectOfType<CharacterController>();
+        //controller = FindObjectOfType<CharacterController>();
         groundUI = GameObject.Find("GroundUI");
 	}
 

@@ -8,13 +8,13 @@ using UnityEngine;
 public class ItemPlacer : MonoBehaviour {
 
     FlightController flightController;
-    PlayerController playerController;
+    //PlayerController playerController;
     int itemSelectionToggle = 0;
     GameObject flyUI;
 
 	// Use this for initialization
 	void Start () {
-		playerController = FindObjectOfType<PlayerController>();
+		//playerController = FindObjectOfType<PlayerController>();
         flightController = FindObjectOfType<FlightController>();
         flyUI = GameObject.Find("FlyUI");
         if(itemSelectionToggle == 0){
