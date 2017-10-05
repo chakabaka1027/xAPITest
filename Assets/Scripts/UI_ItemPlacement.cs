@@ -112,10 +112,12 @@ public class UI_ItemPlacement : MonoBehaviour {
             }
 
             heldObject.transform.parent = GameObject.Find("Level Objects").transform;
+            StartCoroutine("ExpandWhenSpawned");
         }
     }
 
     void ReleaseItem(){
+        StopCoroutine("ExpandWhenSpawned");
         if(heldObject != null){
             heldObject.GetComponent<Rigidbody>().isKinematic = false;
         }
@@ -141,13 +143,27 @@ public class UI_ItemPlacement : MonoBehaviour {
             heldObject.GetComponent<Rigidbody>().isKinematic = true;
         }    
         heldObject.transform.parent = GameObject.Find("Level Objects").transform;
+        StartCoroutine("ExpandWhenSpawned");
     }
     
     void ReleaseDuplicateItem(){
+        StopCoroutine("ExpandWhenSpawned");
         if(heldObject != null){
             heldObject.GetComponent<Rigidbody>().isKinematic = false;
         }
         hasSpawned = false;
         heldObject = null;
+    }
+
+    IEnumerator ExpandWhenSpawned(){
+        float percent = 0;
+        float time = .5f;
+        float speed = 1/time;
+        
+        while(percent < 1){
+            percent += Time.deltaTime * speed;
+            heldObject.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, percent);
+            yield return null;
+        }
     }
 }

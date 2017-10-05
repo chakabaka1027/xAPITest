@@ -97,7 +97,7 @@ public class FlightController : MonoBehaviour {
                 transform.Translate(-Vector3.up * speed * Time.fixedDeltaTime, Space.Self);
             }
             
-            if(Input.GetMouseButton(1)){
+            if(Input.GetMouseButton(0)){
                 ChangePlayerLocation();
             }
             
