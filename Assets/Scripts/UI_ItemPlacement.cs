@@ -37,7 +37,6 @@ public class UI_ItemPlacement : MonoBehaviour {
 	void LateUpdate () {
         if(playerController.flyMode && itemSelectionToggle == 1){
 		    if(Input.GetMouseButton(0)){
-
                 ObjFollowMouseCursor();
             }
 
@@ -59,6 +58,7 @@ public class UI_ItemPlacement : MonoBehaviour {
         }
 	}
 
+    //make objects follow the mouse position
     void ObjFollowMouseCursor(){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
@@ -95,6 +95,7 @@ public class UI_ItemPlacement : MonoBehaviour {
         }
     }
 
+    //spawning items
     public void SpawnItem(){
         if(objectIndex > -1 && Input.GetMouseButton(0) && heldObject == null){
 
@@ -112,12 +113,11 @@ public class UI_ItemPlacement : MonoBehaviour {
             }
 
             heldObject.transform.parent = GameObject.Find("Level Objects").transform;
-            StartCoroutine("ExpandWhenSpawned");
+            //StartCoroutine("ExpandWhenSpawned");
         }
     }
 
     void ReleaseItem(){
-        StopCoroutine("ExpandWhenSpawned");
         if(heldObject != null){
             heldObject.GetComponent<Rigidbody>().isKinematic = false;
         }
@@ -129,6 +129,7 @@ public class UI_ItemPlacement : MonoBehaviour {
         objectIndex = -1;
     }
 
+    //duplicating already selected items
     void DuplicateLastObj(){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
@@ -143,11 +144,10 @@ public class UI_ItemPlacement : MonoBehaviour {
             heldObject.GetComponent<Rigidbody>().isKinematic = true;
         }    
         heldObject.transform.parent = GameObject.Find("Level Objects").transform;
-        StartCoroutine("ExpandWhenSpawned");
+        //StartCoroutine("ExpandWhenSpawned");
     }
     
     void ReleaseDuplicateItem(){
-        StopCoroutine("ExpandWhenSpawned");
         if(heldObject != null){
             heldObject.GetComponent<Rigidbody>().isKinematic = false;
         }
@@ -166,4 +166,7 @@ public class UI_ItemPlacement : MonoBehaviour {
             yield return null;
         }
     }
+
+    //moving existing items
+
 }
