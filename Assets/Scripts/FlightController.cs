@@ -10,6 +10,8 @@ public class FlightController : MonoBehaviour {
     [HideInInspector]
     public bool selectingItem = false;
 
+    bool backpanning = false;
+
     UI_ItemPlacement itemPlacerUI;
 
     int flightToggle = 0;
@@ -33,8 +35,8 @@ public class FlightController : MonoBehaviour {
 	public float mouseSensitivityY = 3f;
 	float verticalLookRotation;
 
-    float yaw = 0.0f;
-    float pitch = 0.0f;
+    float yaw;
+    float pitch;
 
 	// Use this for initialization
 	void Start () {
@@ -42,6 +44,8 @@ public class FlightController : MonoBehaviour {
         //controller = FindObjectOfType<CharacterController>();
         groundUI = GameObject.Find("GroundUI");
         itemPlacerUI = FindObjectOfType<UI_ItemPlacement>();
+        playerController.gameObject.transform.Find("TempMesh").Find("PlayerIcon").gameObject.SetActive(false);
+
 	}
 
     void Update() {
@@ -70,6 +74,7 @@ public class FlightController : MonoBehaviour {
             yaw += mouseSensitivityX * Input.GetAxis("Mouse X");
             pitch -= mouseSensitivityY * Input.GetAxis("Mouse Y");
             pitch = Mathf.Clamp(pitch, -90f, 90f);
+            
 
             transform.localEulerAngles = new Vector3(pitch, yaw, 0.0f);
 
@@ -97,6 +102,7 @@ public class FlightController : MonoBehaviour {
             }
             
         }
+       
     }
 
     void ToggleFlightMode(){
@@ -106,16 +112,30 @@ public class FlightController : MonoBehaviour {
         if(flightToggle == 1){
             playerController.flyMode = true; 
             groundUI.SetActive(false);
+            
             playerController.gameObject.transform.Find("TempMesh").GetComponent<MeshRenderer>().enabled = true;
-            transform.parent.DetachChildren();
-
+            playerController.gameObject.transform.Find("TempMesh").Find("PlayerIcon").gameObject.SetActive(true);
+            
+            Vector3 targetRot = transform.eulerAngles;
+            transform.parent = null;
+            
+            if(transform.eulerAngles.x > 90){
+                pitch = -(360 - transform.eulerAngles.x);
+            } else {
+                pitch = transform.eulerAngles.x;
+            }
+            yaw = transform.eulerAngles.y;            
+            StartCoroutine("PanBack");
+           
         
         //flight off
         } else if (flightToggle == 0){
             if(FindObjectOfType<UI_ItemPlacement>().itemSelectionToggle == 1){
                 itemPlacerUI.ItemSelectionToggle();
             }
+            playerController.gameObject.transform.Find("TempMesh").Find("PlayerIcon").gameObject.SetActive(false);
 
+            StopCoroutine("PanBack");
             playerController.flyMode = false; 
             groundUI.SetActive(true);
             Camera.main.transform.localEulerAngles = Vector3.zero;
@@ -127,11 +147,25 @@ public class FlightController : MonoBehaviour {
 
     }
 
+    IEnumerator PanBack(){
+        float time = .25f;
+        float speed = 1/time;
+        float percent = 0;
+        Vector3 targetPos = gameObject.transform.position + -transform.forward * 3;
+        while (percent < 1){
+            backpanning = true;
+            percent += Time.deltaTime * speed;
+            gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPos, percent);
+            yield return null;
+        }
+        backpanning = false;
+    }
+
     void ChangePlayerLocation(){
         Vector3 ray = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
-        if(Physics.SphereCast(ray, 1f, Camera.main.transform.forward, out hit, Mathf.Infinity, environment)){
+        if(Physics.SphereCast(ray, 1f, Camera.main.transform.forward, out hit, Mathf.Infinity, environment) && !backpanning){
             playerController.gameObject.transform.position = hit.point + hit.normal * 1.25f;
         }
     }
