@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//namespace of the outline script on each item that allows an outline to be rendered onscreen
+using cakeslice;
+
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(FlightController))]
 
@@ -19,9 +22,13 @@ public class UI_ItemPlacement : MonoBehaviour {
     bool duplicateObjSpawned = false;
 
     public LayerMask itemSpawnLocation;
+    public LayerMask itemLayer;
 
     bool hasSpawned = false;
     GameObject heldObject;
+
+    [HideInInspector]
+    public GameObject objCurrentlyHoveringOver;
 
 
 	// Use this for initialization
@@ -33,6 +40,28 @@ public class UI_ItemPlacement : MonoBehaviour {
             flyUI.SetActive(false);
         }
 	}
+
+    void Update() {
+
+    //highlight objects when hovering mouse over them
+        if(flightController.selectingItem) {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		    RaycastHit hit;
+
+		    if(Physics.Raycast(ray, out hit, Mathf.Infinity, itemLayer)){    
+                if(objCurrentlyHoveringOver != null) {
+                    objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
+                }
+
+                objCurrentlyHoveringOver = hit.collider.gameObject;
+                objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = false;
+
+            } else if(objCurrentlyHoveringOver != null){
+                objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
+                objCurrentlyHoveringOver = null;
+            }
+        }
+    }
 	
 	void LateUpdate () {
         if(playerController.flyMode && itemSelectionToggle == 1){
@@ -54,7 +83,6 @@ public class UI_ItemPlacement : MonoBehaviour {
                 ReleaseDuplicateItem();
                 duplicateObjSpawned = false;
             }
-
         }
 	}
 

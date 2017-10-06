@@ -144,12 +144,12 @@ namespace cakeslice
                 outlineCamera.enabled = false;
             }
 
-            renderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.ARGB32);
-            extraRenderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.ARGB32);
+            renderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.Default);
+            extraRenderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.Default);
             UpdateOutlineCameraFromSource();
 
             commandBuffer = new CommandBuffer();
-            outlineCamera.AddCommandBuffer(CameraEvent.AfterImageEffects, commandBuffer);
+            outlineCamera.AddCommandBuffer(CameraEvent.BeforeImageEffects, commandBuffer);
         }
 
         public void OnPreRender()
@@ -161,8 +161,8 @@ namespace cakeslice
 
             if(renderTexture == null || renderTexture.width != sourceCamera.pixelWidth || renderTexture.height != sourceCamera.pixelHeight)
             {
-                renderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.ARGB32);
-                extraRenderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.ARGB32);
+                renderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.Default);
+                extraRenderTexture = new RenderTexture(sourceCamera.pixelWidth, sourceCamera.pixelHeight, 16, RenderTextureFormat.Default);
                 outlineCamera.targetTexture = renderTexture;
             }
             UpdateMaterialsPublicProperties();

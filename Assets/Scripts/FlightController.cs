@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using cakeslice;
 
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(UI_ItemPlacement))]
@@ -61,6 +62,7 @@ public class FlightController : MonoBehaviour {
 
         if(playerController.flyMode){
             if(Input.GetKeyDown(KeyCode.Space)){
+                EraseObjHighlight();
                 itemPlacerUI.ItemSelectionToggle();
             }
         }
@@ -105,6 +107,12 @@ public class FlightController : MonoBehaviour {
        
     }
 
+    void EraseObjHighlight() {
+        if(itemPlacerUI.objCurrentlyHoveringOver != null) {
+            itemPlacerUI.objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
+        }
+    }
+
     void ToggleFlightMode(){
         flightToggle = 1 - flightToggle;
 
@@ -129,7 +137,9 @@ public class FlightController : MonoBehaviour {
            
         
         //flight off
-        } else if (flightToggle == 0){
+        } else if (flightToggle == 0){ 
+            EraseObjHighlight();
+
             if(FindObjectOfType<UI_ItemPlacement>().itemSelectionToggle == 1){
                 itemPlacerUI.ItemSelectionToggle();
             }
