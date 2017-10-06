@@ -42,7 +42,8 @@ public class UI_ItemPlacement : MonoBehaviour {
 	}
 
     void Update() {
-        if(Input.GetKeyDown(KeyCode.X)) {
+        
+        if(Input.GetKey(KeyCode.X)) {
             DeleteObj();
         }
     }
