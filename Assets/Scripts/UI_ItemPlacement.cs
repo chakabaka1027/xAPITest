@@ -46,6 +46,19 @@ public class UI_ItemPlacement : MonoBehaviour {
         if(Input.GetKey(KeyCode.X)) {
             DeleteObj();
         }
+
+        if(objCurrentlyHoveringOver != null) {
+            if (Input.GetAxis("Mouse ScrollWheel") > 0){
+			    objCurrentlyHoveringOver.transform.Rotate(Vector3.up * 5);
+                objCurrentlyHoveringOver.GetComponent<Rigidbody>().isKinematic = true;
+		    }
+		    if (Input.GetAxis("Mouse ScrollWheel") < 0){
+			    objCurrentlyHoveringOver.transform.Rotate(Vector3.down * 5);
+                objCurrentlyHoveringOver.GetComponent<Rigidbody>().isKinematic = true;
+		    } else if (Input.GetAxis("Mouse ScrollWheel") == 0) {
+                objCurrentlyHoveringOver.GetComponent<Rigidbody>().isKinematic = false;
+            }
+        }
     }
 	
 	void LateUpdate () {
