@@ -62,12 +62,12 @@ MonoBehaviour:
         reflectionBlur: 3
         reflectBackfaces: 0
       intensity:
-        reflectionMultiplier: 1.25
-        fadeDistance: 100
-        fresnelFade: 0.5
-        fresnelFadePower: 1
+        reflectionMultiplier: 0.9
+        fadeDistance: 0
+        fresnelFade: 0
+        fresnelFadePower: 0.1
       screenEdgeMask:
-        intensity: 0.5
+        intensity: 0
   depthOfField:
     m_Enabled: 0
     m_Settings:
