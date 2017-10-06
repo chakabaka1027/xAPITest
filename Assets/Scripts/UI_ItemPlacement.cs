@@ -95,7 +95,7 @@ public class UI_ItemPlacement : MonoBehaviour {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 
-		if(Physics.Raycast(ray, out hit, Mathf.Infinity, itemLayer)){    
+		if(Physics.Raycast(ray, out hit, Mathf.Infinity, itemLayer) && !Input.GetMouseButton(0)){    
             if(objCurrentlyHoveringOver != null) {
                 objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
             }
