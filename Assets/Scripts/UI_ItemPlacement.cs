@@ -42,8 +42,9 @@ public class UI_ItemPlacement : MonoBehaviour {
 	}
 
     void Update() {
-
-    
+        if(Input.GetKeyDown(KeyCode.X)) {
+            DeleteObj();
+        }
     }
 	
 	void LateUpdate () {
@@ -106,6 +107,12 @@ public class UI_ItemPlacement : MonoBehaviour {
             objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
             objCurrentlyHoveringOver = null;
         }
+    }
+
+    void DeleteObj() {
+        if(objCurrentlyHoveringOver != null) {
+            Destroy(objCurrentlyHoveringOver);
+        } 
     }
 
     public void ItemSelectionToggle(){
@@ -205,7 +212,4 @@ public class UI_ItemPlacement : MonoBehaviour {
             yield return null;
         }
     }
-
-    //moving existing items
-
 }
