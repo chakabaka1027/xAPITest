@@ -43,30 +43,13 @@ public class UI_ItemPlacement : MonoBehaviour {
 
     void Update() {
 
-    //highlight objects when hovering mouse over them
-        if(flightController.selectingItem) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		    RaycastHit hit;
-
-		    if(Physics.Raycast(ray, out hit, Mathf.Infinity, itemLayer)){    
-                if(objCurrentlyHoveringOver != null) {
-                    objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
-                }
-
-                objCurrentlyHoveringOver = hit.collider.gameObject;
-                objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = false;
-
-            } else if(objCurrentlyHoveringOver != null){
-                objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
-                objCurrentlyHoveringOver = null;
-            }
-        }
+    
     }
 	
 	void LateUpdate () {
         if(playerController.flyMode && itemSelectionToggle == 1){
 		    if(Input.GetMouseButton(0)){
-                ObjFollowMouseCursor();
+                ObjFollowMouseCursor(heldObject);
             }
 
             if(Input.GetMouseButtonUp(0)){
@@ -77,25 +60,51 @@ public class UI_ItemPlacement : MonoBehaviour {
                     DuplicateLastObj();
                     duplicateObjSpawned = true;
                 }
-                ObjFollowMouseCursor();
+                ObjFollowMouseCursor(heldObject);
             }
             if(Input.GetMouseButtonUp(1)){
                 ReleaseDuplicateItem();
                 duplicateObjSpawned = false;
             }
+
+            HighlightObj();
+
+            if(objCurrentlyHoveringOver != null && Input.GetMouseButton(0)) {
+                ObjFollowMouseCursor(objCurrentlyHoveringOver);
+            }
         }
 	}
 
     //make objects follow the mouse position
-    void ObjFollowMouseCursor(){
+    void ObjFollowMouseCursor(GameObject heldObject){
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 
 		if(Physics.SphereCast(ray, .5f, out hit, Mathf.Infinity, itemSpawnLocation) && heldObject != null){
             heldObject.transform.position = hit.point + hit.normal * .5f;
-        } if(!Physics.Raycast(ray, out hit, Mathf.Infinity, itemSpawnLocation) && heldObject != null){
+            heldObject.GetComponent<Rigidbody>().isKinematic = true;
+        } if(!Physics.SphereCast(ray,.5f, out hit, Mathf.Infinity, itemSpawnLocation) && heldObject != null){
             heldObject.transform.position = ray.GetPoint(10);
+            heldObject.GetComponent<Rigidbody>().isKinematic = true;
 
+        } 
+    }
+
+    void HighlightObj() {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+
+		if(Physics.Raycast(ray, out hit, Mathf.Infinity, itemLayer)){    
+            if(objCurrentlyHoveringOver != null) {
+                objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
+            }
+            
+            objCurrentlyHoveringOver = hit.collider.gameObject;
+            objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = false;
+
+        } else if(objCurrentlyHoveringOver != null && !Input.GetMouseButton(0)){
+            objCurrentlyHoveringOver.GetComponent<Outline>().eraseRenderer = true;
+            objCurrentlyHoveringOver = null;
         }
     }
 
@@ -148,6 +157,8 @@ public class UI_ItemPlacement : MonoBehaviour {
     void ReleaseItem(){
         if(heldObject != null){
             heldObject.GetComponent<Rigidbody>().isKinematic = false;
+        } else if (objCurrentlyHoveringOver != null) {
+            objCurrentlyHoveringOver.GetComponent<Rigidbody>().isKinematic = false;
         }
         hasSpawned = false;
         heldObject = null;
