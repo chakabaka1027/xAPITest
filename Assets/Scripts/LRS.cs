@@ -34,6 +34,9 @@ public class LRS : MonoBehaviour {
 	}
 
     private void OnTriggerEnter(Collider other) {
+        float health = FindObjectOfType<PlayerController>().health;
+        float stamina = FindObjectOfType<PlayerController>().stamina;
+
         ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 
 		var lrs = new RemoteLRS(
@@ -43,22 +46,46 @@ public class LRS : MonoBehaviour {
         );
         
         var actor = new Agent();
-        actor.mbox = "mailto:info@tincanapi.com";
+        //actor.mbox = "mailto:info@tincanapi.com";
+        actor.mbox = "mailto:alex.cha@mtsi-va.com";
+        actor.name = "Alex";
 
         var verb = new Verb();
-        verb.id = new Uri ("http://adlnet.gov/expapi/verbs/experienced");
+        verb.id = new Uri ("http://activitystrea.ms/schema/1.0/submit");
         verb.display = new LanguageMap();
-        verb.display.Add("en-US", "experienced");
+        verb.display.Add("en-US", "submitted");
 
         var activity = new Activity();
-        activity.id = new Uri ("http://rusticisoftware.github.io/TinCan.NET").ToString();
+        //id
+        activity.id = "http://adlnet.gov/expapi/activities/performance";
+        
+        //definition
+        activity.definition = new ActivityDefinition();
+            
+            //definition name
+        activity.definition.name = new LanguageMap();
+        activity.definition.name.Add("en-US", "Level Performance");
 
+            //definition description
+        activity.definition.description = new LanguageMap();
+        activity.definition.description.Add("en-US", "The Player's Performance Score: " + health +" health, " + stamina + " stamina");
 
-
+            //definition type
+        activity.definition.type = new Uri("http://adlnet.gov/expapi/activities/performance");
+        
+        //result
+        var result = new Result();
+        result.completion = true;
+        result.success = true;
+        result.score = new Score();
+        result.score.raw = stamina;
+        
+        //declaring the full statement
         var statement = new Statement();
         statement.actor = actor;
         statement.verb = verb;
         statement.target = activity;
+        statement.result = result;
 
 
         StatementLRSResponse lrsResponse = lrs.SaveStatement(statement);
@@ -68,6 +95,7 @@ public class LRS : MonoBehaviour {
         }
         else {
             // Do something with failure
+            Debug.Log("YOU SUCK!");
         }    
     }
 }
