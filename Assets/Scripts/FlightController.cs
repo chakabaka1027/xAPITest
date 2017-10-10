@@ -50,28 +50,29 @@ public class FlightController : MonoBehaviour {
 	}
 
     void Update() {
-        if(Input.GetKeyDown(KeyCode.T)){
-            ToggleFlightMode();
-        }
-
-        if(Input.GetKey(KeyCode.LeftShift)){
-            speed = fastSpeed;
-        } else {
-            speed = slowSpeed;
-        }
-
-        if(playerController.flyMode){
-            if(Input.GetKeyDown(KeyCode.Space)){
-                EraseObjHighlight();
-                itemPlacerUI.ItemSelectionToggle();
+        if(FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo){
+            if(Input.GetKeyDown(KeyCode.T)){
+                ToggleFlightMode();
             }
-        }
-        
+
+            if(Input.GetKey(KeyCode.LeftShift)){
+                speed = fastSpeed;
+            } else {
+                speed = slowSpeed;
+            }
+
+            if(playerController.flyMode){
+                if(Input.GetKeyDown(KeyCode.Space)){
+                    EraseObjHighlight();
+                    itemPlacerUI.ItemSelectionToggle();
+                }
+            }
+        }   
     }
 
     void LateUpdate () {
 
-        if(playerController.flyMode && !selectingItem){
+        if(playerController.flyMode && !selectingItem && FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo){
 
             yaw += mouseSensitivityX * Input.GetAxis("Mouse X");
             pitch -= mouseSensitivityY * Input.GetAxis("Mouse Y");

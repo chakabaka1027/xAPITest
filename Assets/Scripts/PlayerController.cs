@@ -52,13 +52,14 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
         controller = GetComponent<CharacterController>();
         gravityShift = GetComponent<GravityShift>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
 	}
 	
     void Update() {
 
-    if(!flyMode){
+    if(!flyMode && FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo){
         //set movespeed
             if(Input.GetKey(KeyCode.LeftShift)){
         	    speed = runSpeed;
@@ -89,7 +90,7 @@ public class PlayerController : MonoBehaviour {
     }
 
 	void LateUpdate () {
-        if(!flyMode){
+        if(!flyMode && FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo){
 	    //crouch
 		    if(Input.GetKeyDown(KeyCode.C)){
 			    crouchToggle = 1 - crouchToggle;

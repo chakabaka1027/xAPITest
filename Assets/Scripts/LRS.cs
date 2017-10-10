@@ -13,6 +13,9 @@ using System.Net.Security;
 
 public class LRS : MonoBehaviour {
 
+    public string playerName = "";
+    public string email = "";
+
     public bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
 		bool isOk = true;
 		// If there are errors in the certificate chain, look at each error to determine the cause.
@@ -34,9 +37,16 @@ public class LRS : MonoBehaviour {
 	}
 
     private void OnTriggerEnter(Collider other) {
-        float health = FindObjectOfType<PlayerController>().health;
-        float stamina = FindObjectOfType<PlayerController>().stamina;
+        //string name = "Alex";
+        //string email = "alex.cha@mtsi-va.com";
 
+        SendMessage(playerName, email);
+    }
+
+    void SendMessage(string playerName, string email){
+        float health = FindObjectOfType<PlayerController>().health;
+        float stamina = FindObjectOfType<PlayerController>().stamina;        
+        
         ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 
 		var lrs = new RemoteLRS(
@@ -47,8 +57,8 @@ public class LRS : MonoBehaviour {
         
         var actor = new Agent();
         //actor.mbox = "mailto:info@tincanapi.com";
-        actor.mbox = "mailto:alex.cha@mtsi-va.com";
-        actor.name = "Alex";
+        actor.mbox = "mailto:" + email;
+        actor.name = playerName;
 
         var verb = new Verb();
         verb.id = new Uri ("http://activitystrea.ms/schema/1.0/submit");
@@ -64,11 +74,11 @@ public class LRS : MonoBehaviour {
             
             //definition name
         activity.definition.name = new LanguageMap();
-        activity.definition.name.Add("en-US", "Level Performance");
+        activity.definition.name.Add("en-US", "Stamina");
 
             //definition description
         activity.definition.description = new LanguageMap();
-        activity.definition.description.Add("en-US", "The Player's Performance Score: " + health +" health, " + stamina + " stamina");
+        activity.definition.description.Add("en-US", "The Player's Stamina Score");
 
             //definition type
         activity.definition.type = new Uri("http://adlnet.gov/expapi/activities/performance");
