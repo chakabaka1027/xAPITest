@@ -25,6 +25,10 @@ public class ClingOns : MonoBehaviour {
         StopCoroutine("Jump");
     }
 
+    public void Damage(){
+        Debug.Log("damaged!");
+    }
+
     IEnumerator Jump(){
         if(isSeeking){
             yield return new WaitForSeconds(1);
