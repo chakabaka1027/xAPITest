@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(GravityShift))]
 [RequireComponent(typeof(Grab))]
@@ -48,11 +49,20 @@ public class PlayerController : MonoBehaviour {
 	public float mouseSensitivityY = 6f;
 	float verticalLookRotation;
 
+    //UI
+    Image bodyUI;
+    Image headUI;
+    float headGbValue = 1;
+    float bodyGbValue = 1;
+
 
 	void Start () {
         controller = GetComponent<CharacterController>();
         gravityShift = GetComponent<GravityShift>();
         
+        bodyUI = GameObject.Find("BodyUI").GetComponent<Image>();
+        headUI = GameObject.Find("HeadUI").GetComponent<Image>();
+
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
 	}
@@ -218,5 +228,21 @@ public class PlayerController : MonoBehaviour {
         body.velocity = pushDir * 5;
     }
 
+
+    public void DamageBody(){
+        bodyGbValue -= .2f;
+        if(bodyGbValue < 0){
+            bodyGbValue = 0;
+        }
+        bodyUI.color = new Color(1, bodyGbValue, bodyGbValue, 1);
+    }
+
+    public void DamageHead(){
+        headGbValue -= .2f;
+        if(headGbValue < 0){
+            headGbValue = 0;
+        }
+        headUI.color = new Color(1, headGbValue, headGbValue, 1);
+    }
     
 }

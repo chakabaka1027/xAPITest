@@ -7,9 +7,12 @@ public class ClingOns : MonoBehaviour {
     Rigidbody rb;
     bool isSeeking = true;
 
+    PlayerController playerController;
+
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
+        playerController = FindObjectOfType<PlayerController>();
 	}
 	
 	// Update is called once per frame
@@ -25,8 +28,16 @@ public class ClingOns : MonoBehaviour {
         StopCoroutine("Jump");
     }
 
-    public void Damage(){
-        Debug.Log("damaged!");
+
+    private void OnCollisionEnter(Collision collision) {
+        if(collision.collider.gameObject.name == "Head"){
+            Debug.Log("head");
+            playerController.DamageHead();
+        }
+        if(collision.collider.gameObject.name == "Body"){
+            Debug.Log("body");
+            playerController.DamageBody();
+        }
     }
 
     IEnumerator Jump(){

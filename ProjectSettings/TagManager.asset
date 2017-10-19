@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - StickyPad
-  - ClingOn
   layers:
   - Default
   - TransparentFX
@@ -18,8 +17,8 @@ TagManager:
   - Grabable
   - Player
   - StickyPads
-  - 
-  - 
+  - Damagers
+  - PlayerHitBox
   - 
   - 
   - 
