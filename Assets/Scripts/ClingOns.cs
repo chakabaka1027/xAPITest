@@ -17,7 +17,16 @@ public class ClingOns : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {         
+        if(FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo){
+            isSeeking = true;
+            rb.isKinematic = false;
+        } 
         
+        if (!FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo || playerController.flyMode){
+            isSeeking = false;
+            rb.isKinematic = true;
+        }
+
 	}
 
 
@@ -31,11 +40,9 @@ public class ClingOns : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if(collision.collider.gameObject.name == "Head"){
-            Debug.Log("head");
             playerController.DamageHead();
         }
         if(collision.collider.gameObject.name == "Body"){
-            Debug.Log("body");
             playerController.DamageBody();
         }
     }

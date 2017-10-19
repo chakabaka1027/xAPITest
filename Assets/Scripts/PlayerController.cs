@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(GravityShift))]
 [RequireComponent(typeof(Grab))]
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour {
     Image headUI;
     float headGbValue = 1;
     float bodyGbValue = 1;
+    Image healthUI;
 
 
 	void Start () {
@@ -62,7 +64,7 @@ public class PlayerController : MonoBehaviour {
         
         bodyUI = GameObject.Find("BodyUI").GetComponent<Image>();
         headUI = GameObject.Find("HeadUI").GetComponent<Image>();
-
+        healthUI = GameObject.Find("Health Bar").GetComponent<Image>();
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
 	}
@@ -231,6 +233,13 @@ public class PlayerController : MonoBehaviour {
 
     public void DamageBody(){
         bodyGbValue -= .2f;
+        health -= 5;
+
+        if(health <= 0){
+            Die();
+        }
+        healthUI.fillAmount = health / 100;
+
         if(bodyGbValue < 0){
             bodyGbValue = 0;
         }
@@ -239,10 +248,21 @@ public class PlayerController : MonoBehaviour {
 
     public void DamageHead(){
         headGbValue -= .2f;
+        health -= 10;
+
+        if(health <= 0){
+            Die();
+        }
+        healthUI.fillAmount = health / 100;
+
         if(headGbValue < 0){
             headGbValue = 0;
         }
         headUI.color = new Color(1, headGbValue, headGbValue, 1);
+    }
+
+    void Die(){
+        SceneManager.LoadScene("Game");
     }
     
 }
