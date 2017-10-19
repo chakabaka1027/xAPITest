@@ -48,12 +48,19 @@ public class ClingOns : MonoBehaviour {
             playerController.DamageBody();
             StartCoroutine(Stick(collision.collider.gameObject));
         }
+        //if(collision.collider.gameObject.tag == "StickyPad"){
+        //    isStuck = true;
+        //    //gameObject.transform.parent = collision.collider.gameObject.transform;
+        //    StopCoroutine("Jump");
+        //    rb.isKinematic = true;
+        //    //gameObject.GetComponent<SphereCollider>().enabled = false;
+        //}
     }
 
     IEnumerator Jump(){
         if(isSeeking){
             yield return new WaitForSeconds(.5f);
-            rb.AddForce(((FindObjectOfType<PlayerController>().gameObject.transform.position + Vector3.up * 2.5f) - gameObject.transform.position).normalized * 6.5f, ForceMode.Impulse);
+            rb.AddForce(((FindObjectOfType<PlayerController>().gameObject.transform.position + FindObjectOfType<PlayerController>().gameObject.transform.up* 2.5f) - gameObject.transform.position).normalized * 6.5f, ForceMode.Impulse);
         }
     }
 
@@ -82,4 +89,5 @@ public class ClingOns : MonoBehaviour {
         }
         Destroy(gameObject);
     }
+
 }
