@@ -6,6 +6,7 @@ public class ClingOns : MonoBehaviour {
 
     Rigidbody rb;
     bool isSeeking = true;
+    bool isStuck;
 
     PlayerController playerController;
 
@@ -17,7 +18,7 @@ public class ClingOns : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {         
-        if(FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo){
+        if(FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo && !isStuck){
             isSeeking = true;
             rb.isKinematic = false;
         } 
@@ -41,16 +42,42 @@ public class ClingOns : MonoBehaviour {
     private void OnCollisionEnter(Collision collision) {
         if(collision.collider.gameObject.name == "Head"){
             playerController.DamageHead();
+            StartCoroutine(Stick(collision.collider.gameObject));
         }
         if(collision.collider.gameObject.name == "Body"){
             playerController.DamageBody();
+            StartCoroutine(Stick(collision.collider.gameObject));
         }
     }
 
     IEnumerator Jump(){
         if(isSeeking){
-            yield return new WaitForSeconds(1);
-            rb.AddForce(((FindObjectOfType<PlayerController>().gameObject.transform.position + Vector3.up * 2) - gameObject.transform.position).normalized * 7, ForceMode.Impulse);
+            yield return new WaitForSeconds(.5f);
+            rb.AddForce(((FindObjectOfType<PlayerController>().gameObject.transform.position + Vector3.up * 2.5f) - gameObject.transform.position).normalized * 6.5f, ForceMode.Impulse);
         }
+    }
+
+    IEnumerator Stick(GameObject surface){
+        isStuck = true;
+        gameObject.transform.parent = surface.transform;
+        StopCoroutine("Jump");
+        rb.isKinematic = true;
+        gameObject.GetComponent<SphereCollider>().enabled = false;
+        yield return new WaitForSeconds(3);
+        //gameObject.GetComponent<SphereCollider>().enabled = true;    
+        //gameObject.transform.parent = null;
+        //rb.isKinematic = false;
+        //isStuck = false;
+        
+        float percent = 0;
+        float time = 1;
+        float speed = 1 / time;
+
+        while(percent < 1){
+            percent += Time.deltaTime * speed;
+            gameObject.transform.localScale = Vector3.Lerp(new Vector3(.2f, .2f, .2f), Vector3.zero, percent);
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 }
