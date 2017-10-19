@@ -73,9 +73,11 @@ public class ClingOns : MonoBehaviour {
         float time = 1;
         float speed = 1 / time;
 
+        Vector3 currentScale = gameObject.transform.localScale;
+
         while(percent < 1){
             percent += Time.deltaTime * speed;
-            gameObject.transform.localScale = Vector3.Lerp(new Vector3(.2f, .2f, .2f), Vector3.zero, percent);
+            gameObject.transform.localScale = Vector3.Lerp(currentScale, Vector3.zero, percent);
             yield return null;
         }
         Destroy(gameObject);

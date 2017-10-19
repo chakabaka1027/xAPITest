@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.PostProcessing;
 
 [RequireComponent(typeof(GravityShift))]
 [RequireComponent(typeof(Grab))]
@@ -28,12 +29,12 @@ public class PlayerController : MonoBehaviour {
 
     //movement
     public bool flyMode = false;
-    //flymode
+
     public float speed = 4;
-    [HideInInspector]
     public float walkSpeed = 4;
-    [HideInInspector]
     public float runSpeed = 8;
+    public float maxWalkSpeed = 4;
+    public float maxRunSpeed = 8;
 
     Vector3 targetWalkAmount;
     Vector3 walkAmount;
@@ -65,6 +66,8 @@ public class PlayerController : MonoBehaviour {
         bodyUI = GameObject.Find("BodyUI").GetComponent<Image>();
         headUI = GameObject.Find("HeadUI").GetComponent<Image>();
         healthUI = GameObject.Find("Health Bar").GetComponent<Image>();
+
+        ResetBlurAmount();
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
 	}
@@ -73,6 +76,7 @@ public class PlayerController : MonoBehaviour {
 
     if(!flyMode && FindObjectOfType<UI_SubmitPlayerInfo>().submittedPlayerInfo){
         //set movespeed
+
             if(Input.GetKey(KeyCode.LeftShift)){
         	    speed = runSpeed;
 		    } else {
@@ -232,8 +236,11 @@ public class PlayerController : MonoBehaviour {
 
 
     public void DamageBody(){
-        bodyGbValue -= .2f;
-        health -= 5;
+        bodyGbValue -= .05f;
+        health -= 2.5f;
+
+        maxWalkSpeed /= 1.05f;
+        maxRunSpeed /= 1.05f;
 
         if(health <= 0){
             Die();
@@ -250,6 +257,8 @@ public class PlayerController : MonoBehaviour {
         headGbValue -= .2f;
         health -= 10;
 
+        BlurVision();
+
         if(health <= 0){
             Die();
         }
@@ -264,5 +273,36 @@ public class PlayerController : MonoBehaviour {
     void Die(){
         SceneManager.LoadScene("Game");
     }
+
+    void BlurVision(){
+        PostProcessingProfile profile = Camera.main.gameObject.GetComponent<PostProcessingBehaviour>().profile;
+
+        //copy current bloom settings from the profile into a temporary variable
+        MotionBlurModel.Settings motionBlurSettings = profile.motionBlur.settings;
+        ColorGradingModel.Settings colorGradingSettings = profile.colorGrading.settings;
+        //change the intensity in the temporary settings variable
+        motionBlurSettings.frameBlending += .2f;
+        
+        colorGradingSettings.basic.saturation -= .15f;
+        if(colorGradingSettings.basic.saturation < .2f){
+            colorGradingSettings.basic.saturation = .2f;        
+        }
+
+        //set the bloom settings in the actual profile to the temp settings with the changed value
+        profile.motionBlur.settings = motionBlurSettings;
+        profile.colorGrading.settings = colorGradingSettings;
+    }
+
+    void ResetBlurAmount(){
+        PostProcessingProfile profile = Camera.main.gameObject.GetComponent<PostProcessingBehaviour>().profile;
+        MotionBlurModel.Settings motionBlurSettings = profile.motionBlur.settings;
+        motionBlurSettings.frameBlending = 0f;
+        profile.motionBlur.settings = motionBlurSettings;
+
+        ColorGradingModel.Settings colorGradingSettings = profile.colorGrading.settings;
+        colorGradingSettings.basic.saturation = 1;
+        profile.colorGrading.settings = colorGradingSettings;
+    }
+
     
 }

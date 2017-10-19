@@ -8,6 +8,8 @@ public class StickyPad : MonoBehaviour {
     PlayerController playerController;
     public LayerMask stickyPad;
 
+    
+
 	// Use this for initialization
 	void Start () {
 		playerController = FindObjectOfType<PlayerController>();
@@ -24,14 +26,15 @@ public class StickyPad : MonoBehaviour {
         }
 
         if(isStuck){
-            playerController.walkSpeed = 1;
-            playerController.runSpeed = 2;
+            playerController.walkSpeed = 1f;
+            playerController.runSpeed = 2f;
 
         } else {
-            playerController.walkSpeed = 4;
-            playerController.runSpeed = 13;
+            playerController.walkSpeed = playerController.maxWalkSpeed;
+            playerController.runSpeed = playerController.maxRunSpeed;
         }
 	}
+
 
     void Slow() {
         isStuck = true;
