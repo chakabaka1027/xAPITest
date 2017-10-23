@@ -41,20 +41,20 @@ public class ClingOns : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if(collision.collider.gameObject.name == "Head"){
-            playerController.DamageHead();
+            playerController.DamageHead(10);
             StartCoroutine(Stick(collision.collider.gameObject));
         }
         if(collision.collider.gameObject.name == "Body"){
-            playerController.DamageBody();
+            playerController.DamageBody(2.5f);
             StartCoroutine(Stick(collision.collider.gameObject));
         }
-        //if(collision.collider.gameObject.tag == "StickyPad"){
-        //    isStuck = true;
-        //    //gameObject.transform.parent = collision.collider.gameObject.transform;
-        //    StopCoroutine("Jump");
-        //    rb.isKinematic = true;
-        //    //gameObject.GetComponent<SphereCollider>().enabled = false;
-        //}
+        if (collision.collider.gameObject.tag == "StickyPad") {
+            isStuck = true;
+            //gameObject.transform.parent = collision.collider.gameObject.transform;
+            StopCoroutine("Jump");
+            rb.isKinematic = true;
+            //gameObject.GetComponent<SphereCollider>().enabled = false;
+        }
     }
 
     IEnumerator Jump(){

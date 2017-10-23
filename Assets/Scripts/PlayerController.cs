@@ -235,9 +235,9 @@ public class PlayerController : MonoBehaviour {
     }
 
 
-    public void DamageBody(){
+    public void DamageBody(float damageAmt){
         bodyGbValue -= .05f;
-        health -= 2.5f;
+        health -= damageAmt;
 
         maxWalkSpeed /= 1.05f;
         maxRunSpeed /= 1.05f;
@@ -253,9 +253,9 @@ public class PlayerController : MonoBehaviour {
         bodyUI.color = new Color(1, bodyGbValue, bodyGbValue, 1);
     }
 
-    public void DamageHead(){
+    public void DamageHead(float damageAmt){
         headGbValue -= .2f;
-        health -= 10;
+        health -= damageAmt;
 
         BlurVision();
 
